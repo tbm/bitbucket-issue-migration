@@ -666,19 +666,19 @@ def format_user(user, options):
     # 'reported_by' key, so just be sure to pass in None
     if user is None:
         return "Anonymous"
+    user_info = []
     if ' ' in user['nickname']:
         if user['display_name'] != user['nickname']:
-            bb_user = f"Bitbucket: {user['nickname']}"
-        else:
-            bb_user = ""
+            user_info.append(f"Bitbucket: {user['nickname']}")
     else:
-        bb_user = "Bitbucket: [{0}](https://bitbucket.org/{0})".format(user['nickname'])
+        user_info.append("Bitbucket: [{0}](https://bitbucket.org/{0})".format(user['nickname']))
     gh_username = _gh_username(user['nickname'], options.users, options.gh_auth)
     if gh_username is not None:
-        gh_user = "GitHub: [{0}](https://github.com/{0})".format(gh_username)
-    else:
-        gh_user = ""
-    return (user['display_name'] + " (" + bb_user + ", " + gh_user + ")")
+        user_info.append("GitHub: [{0}](https://github.com/{0})".format(gh_username))
+    info = user['display_name']
+    if user_info:
+        info += " (" + ", ".join(user_info) + ")"
+    return info
 
 
 def convert_date(bb_date):
