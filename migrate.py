@@ -666,7 +666,13 @@ def format_user(user, options):
     # 'reported_by' key, so just be sure to pass in None
     if user is None:
         return "Anonymous"
-    bb_user = "Bitbucket: [{0}](https://bitbucket.org/{0})".format(user['nickname'])
+    if ' ' in user['nickname']:
+        if user['display_name'] != user['nickname']:
+            bb_user = f"Bitbucket: {user['nickname']}"
+        else:
+            bb_user = ""
+    else:
+        bb_user = "Bitbucket: [{0}](https://bitbucket.org/{0})".format(user['nickname'])
     gh_username = _gh_username(user['nickname'], options.users, options.gh_auth)
     if gh_username is not None:
         gh_user = "GitHub: [{0}](https://github.com/{0})".format(gh_username)
